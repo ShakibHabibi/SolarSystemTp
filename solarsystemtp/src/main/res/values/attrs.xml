@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <declare-styleable name="SolarSystemTp">
+    <attr name="progress" format="float" />
+    <attr name="progress_width" format="dimension" />
+    <attr name="progress_radius" format="dimension" />
+    <attr name="progress_color" format="reference" />
+    <attr name="progress_bg_color" format="reference" />
+
+    <attr name="number_of_rings" format="integer" />
+    <attr name="rings_margin" format="dimension" />
+    <attr name="rings_width" format="dimension" />
+
+    <attr name="center_text" format="string" />
+    <attr name="center_text_size" format="dimension" />
+    <attr name="center_text_color" format="reference" />
+    <attr name="center_text_font" format="reference" />
+    <attr name="center_styled_text" format="string" />
+    <attr name="center_styled_text_font" format="reference" />
+    <attr name="center_styled_text_color" format="reference" />
+    <attr name="center_styled_text_size" format="reference" />
+
+    <attr name="planet_radius" format="float" />
+    <attr name="planet_text_size" format="dimension" />
+    <attr name="planet_text_font" format="reference" />
+  </declare-styleable>
+</resources>
