@@ -26,7 +26,7 @@ class SolarSystemTP(context: Context, attrs: AttributeSet) : View(context, attrs
 
     private var planets: MutableList<Planet> = mutableListOf()
 
-    private val progress: Float
+    private var progress: Float
     private val progressWidth: Float
     private val progressColor: Int
     private val progressBgColor: Int
@@ -294,7 +294,7 @@ class SolarSystemTP(context: Context, attrs: AttributeSet) : View(context, attrs
         }
     }
 
-    fun addPlanets(newPlanets: List<Planet>) {
+    fun setPlanets(newPlanets: List<Planet>) {
         if (newPlanets.size > 8) {
             throw ArrayIndexOutOfBoundsException("Expected size of 8 at max but found ${newPlanets.size}")
         }
@@ -314,6 +314,12 @@ class SolarSystemTP(context: Context, attrs: AttributeSet) : View(context, attrs
 
     fun removePlanet(newPlanet: Planet) {
         planets.remove(newPlanet)
+        invalidate()
+    }
+
+    fun setProgress(newProgress: Float) {
+        progress = newProgress
+        calculateAngle()
         invalidate()
     }
 
