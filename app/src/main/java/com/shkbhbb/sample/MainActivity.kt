@@ -10,8 +10,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var index = 0
-
         val planets: List<Planet> = listOf(
             Planet("Galaxy A52"),
             Planet("My PC"),
@@ -21,7 +19,7 @@ class MainActivity : AppCompatActivity() {
             Planet("Galaxy A52")
         )
 
-        val solarSystemTP=findViewById<SolarSystemTP>(R.id.solar)
+        val solarSystemTP = findViewById<SolarSystemTP>(R.id.solar)
         solarSystemTP.setPlanets(planets)
     }
 }

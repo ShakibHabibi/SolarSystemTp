@@ -71,7 +71,7 @@ class SolarSystemTP(context: Context, attrs: AttributeSet) : View(context, attrs
 
                 numberOfRings = getInteger(R.styleable.SolarSystemTp_number_of_rings, 5)
                 ringsMargin = getDimension(R.styleable.SolarSystemTp_rings_margin, 16.dpToPx())
-                ringsWidth = getDimension(R.styleable.SolarSystemTp_rings_width, 2.dpToPx())
+                ringsWidth = getDimension(R.styleable.SolarSystemTp_rings_width, 1.dpToPx())
 
                 centerText = getString(R.styleable.SolarSystemTp_center_text) ?: ""
                 centerTextSize =
