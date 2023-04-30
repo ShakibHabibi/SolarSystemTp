@@ -11,6 +11,7 @@ import android.text.TextPaint
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -24,7 +25,10 @@ class SolarSystemTP(context: Context, attrs: AttributeSet) : View(context, attrs
         R.color.black_32, R.color.black_24, R.color.black_16, R.color.black_8, R.color.black_5
     )
 
+    private var planetListener: PlanetListener? = null
+
     private var planets: MutableList<Planet> = mutableListOf()
+    private var planetRecs: MutableList<RectF> = mutableListOf()
 
     private var progress: Float
     private val progressWidth: Float
@@ -50,6 +54,7 @@ class SolarSystemTP(context: Context, attrs: AttributeSet) : View(context, attrs
     private lateinit var progressPaint: Paint
     private lateinit var progressBgPaint: Paint
     private lateinit var centerTextPaint: TextPaint
+    private lateinit var transparentPaint: Paint
     private lateinit var centerStyledTextPaint: TextPaint
 
     private lateinit var ringRec: RectF
@@ -122,6 +127,10 @@ class SolarSystemTP(context: Context, attrs: AttributeSet) : View(context, attrs
     }
 
     private fun setUpPaint() {
+        transparentPaint = Paint(ANTI_ALIAS_FLAG).apply {
+            color = ContextCompat.getColor(context, R.color.transparent)
+        }
+
         progressPaint = Paint(ANTI_ALIAS_FLAG).apply {
             color = ContextCompat.getColor(context, progressColor)
             strokeWidth = progressWidth
@@ -199,13 +208,27 @@ class SolarSystemTP(context: Context, attrs: AttributeSet) : View(context, attrs
     }
 
     private fun drawPlanets(canvas: Canvas) {
+        planetRecs.clear()
+
         for (i in planets.indices) {
             val (x, y) = Planet.getXY(i, this@SolarSystemTP)
             canvas.drawCircle(x, y, planetRadius, Planet.getCurrentPlanetPaint(context, i))
 
             val nameStaticLayout = drawPlanetText(canvas, i, x, y)
             drawPlanetBackground(canvas, i, nameStaticLayout, x, y)
+            drawArea(canvas, nameStaticLayout, x, y)
         }
+    }
+
+    private fun drawArea(canvas: Canvas, nameStaticLayout: StaticLayout, x: Float, y: Float) {
+        val area = RectF(
+            x - (nameStaticLayout.width / 2f) - 4.dpToPx(),
+            y - (nameStaticLayout.height) - 13.dpToPx(),
+            x - (nameStaticLayout.width / 2f) + nameStaticLayout.width + 4.dpToPx(),
+            y + planetRadius
+        )
+        canvas.drawRect(area, transparentPaint)
+        planetRecs.add(area)
     }
 
     private fun drawPlanetText(canvas: Canvas, index: Int, x: Float, y: Float): StaticLayout {
@@ -323,6 +346,10 @@ class SolarSystemTP(context: Context, attrs: AttributeSet) : View(context, attrs
         invalidate()
     }
 
+    fun setOnPlanetListener(planetListener: PlanetListener) {
+        this.planetListener = planetListener
+    }
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val viewWH = ((finalProgressWidth + (ringsMargin * numberOfRings)) * 2)
 
@@ -340,6 +367,26 @@ class SolarSystemTP(context: Context, attrs: AttributeSet) : View(context, attrs
             measureDimension(desiredWidth, widthMeasureSpec),
             measureDimension(desiredHeight, heightMeasureSpec)
         )
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        if (planetListener == null) {
+            return true
+        }
+
+        event?.let {
+            val selectedX = it.x
+            val selectedY = it.y
+
+            when (it.action) {
+                MotionEvent.ACTION_UP -> planetRecs.forEachIndexed { index, recF ->
+                    if (selectedX in recF.left..recF.right && selectedY in recF.top..recF.bottom) {
+                        planetListener!!.onPlanetSelected(planets[index])
+                    }
+                }
+            }
+        }
+        return true
     }
 
     private fun measureDimension(desiredSize: Int, measureSpec: Int): Int {
@@ -365,4 +412,8 @@ class SolarSystemTP(context: Context, attrs: AttributeSet) : View(context, attrs
     private fun Int?.spToPx(): Float = TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_SP, this?.toFloat() ?: 0F, context.resources.displayMetrics
     )
+
+    interface PlanetListener {
+        fun onPlanetSelected(planet: Planet)
+    }
 }

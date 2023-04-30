@@ -1,6 +1,7 @@
 package com.shkbhbb.sample
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.shkbhbb.solarsystemtp.Planet
 import com.shkbhbb.solarsystemtp.SolarSystemTP
@@ -21,5 +22,10 @@ class MainActivity : AppCompatActivity() {
 
         val solarSystemTP = findViewById<SolarSystemTP>(R.id.solar)
         solarSystemTP.setPlanets(planets)
+        solarSystemTP.setOnPlanetListener(object : SolarSystemTP.PlanetListener {
+            override fun onPlanetSelected(planet: Planet) {
+                Toast.makeText(this@MainActivity, planet.name, Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }
