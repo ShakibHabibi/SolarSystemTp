@@ -381,7 +381,7 @@ class SolarSystemTP(context: Context, attrs: AttributeSet) : View(context, attrs
             when (it.action) {
                 MotionEvent.ACTION_UP -> planetRecs.forEachIndexed { index, recF ->
                     if (selectedX in recF.left..recF.right && selectedY in recF.top..recF.bottom) {
-                        planetListener!!.onPlanetSelected(planets[index])
+                        planetListener!!.onPlanetSelected(index, planets[index])
                     }
                 }
             }
@@ -414,6 +414,6 @@ class SolarSystemTP(context: Context, attrs: AttributeSet) : View(context, attrs
     )
 
     interface PlanetListener {
-        fun onPlanetSelected(planet: Planet)
+        fun onPlanetSelected(index: Int, planet: Planet)
     }
 }
