@@ -350,6 +350,16 @@ class SolarSystemTP(context: Context, attrs: AttributeSet) : View(context, attrs
         this.planetListener = planetListener
     }
 
+    fun setCenterText(text: String) {
+        centerText = text
+        invalidate()
+    }
+
+    fun setCenterStyledText(text: String) {
+        centerStyledText = text
+        invalidate()
+    }
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val viewWH = ((finalProgressWidth + (ringsMargin * numberOfRings)) * 2)
 
