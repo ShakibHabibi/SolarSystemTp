@@ -42,6 +42,7 @@ class SolarSystemTP(context: Context, attrs: AttributeSet) : View(context, attrs
     private val centerTextSize: Float
     private var centerTextColor: Int
     private var centerTextFont: Int
+    private var centerHelperText: String
     private var centerStyledText: String
     private val centerStyledTextSize: Float
     private var centerStyledTextColor: Int
@@ -85,6 +86,7 @@ class SolarSystemTP(context: Context, attrs: AttributeSet) : View(context, attrs
                     getResourceId(R.styleable.SolarSystemTp_center_text_color, R.color.black_87)
                 centerTextFont =
                     getResourceId(R.styleable.SolarSystemTp_center_text_font, R.font.pjs_regular)
+                centerHelperText = getString(R.styleable.SolarSystemTp_center_helper_text) ?: ""
                 centerStyledText = getString(R.styleable.SolarSystemTp_center_styled_text) ?: ""
                 centerStyledTextSize =
                     getDimension(R.styleable.SolarSystemTp_center_styled_text_size, 18.spToPx())
@@ -181,6 +183,7 @@ class SolarSystemTP(context: Context, attrs: AttributeSet) : View(context, attrs
             drawRings(it)
             drawPlanets(it)
             drawCenterText(it)
+            drawCenterHelperText(it)
             drawCenterStyledText(it)
         }
     }
@@ -295,26 +298,50 @@ class SolarSystemTP(context: Context, attrs: AttributeSet) : View(context, attrs
         canvas.restore()
     }
 
+    private fun drawCenterHelperText(canvas: Canvas) {
+        val width = centerStyledTextPaint.measureText(centerStyledText)
+
+        val centerStaticLayBuilder = StaticLayout.Builder.obtain(
+            centerHelperText,
+            0,
+            centerHelperText.length,
+            centerTextPaint,
+            (progressRadius * 2).toInt()
+        ).setAlignment(Layout.Alignment.ALIGN_CENTER).setLineSpacing(4.dpToPx(), 1f)
+        val centerStaticLay = centerStaticLayBuilder.build()
+
+        canvas.save()
+        canvas.translate(
+            ((measuredWidth / 2f) - (centerStaticLay.width / 2f)) + width / 2,
+            ((measuredHeight / 2f) - (centerStaticLay.height / 2f))
+        )
+
+        centerStaticLay.draw(canvas)
+        canvas.restore()
+    }
+
     private fun drawCenterStyledText(canvas: Canvas) {
-        if (centerStyledText.isNotEmpty()) {
-            val centerStyledStaticLayBuilder = StaticLayout.Builder.obtain(
-                centerStyledText,
-                0,
-                centerStyledText.length,
-                centerStyledTextPaint,
-                (progressRadius * 2).toInt()
-            ).setAlignment(Layout.Alignment.ALIGN_CENTER).setLineSpacing(2.dpToPx(), 1f)
-            val centerStyledStaticLay = centerStyledStaticLayBuilder.build()
+        if (centerStyledText.isEmpty()) return
 
-            canvas.save()
-            canvas.translate(
-                ((measuredWidth / 2f) - (centerStyledStaticLay.width / 2f)),
-                ((measuredHeight / 2f) - (centerStyledStaticLay.height / 2f))
-            )
+        val width = centerTextPaint.measureText(centerHelperText)
 
-            centerStyledStaticLay.draw(canvas)
-            canvas.restore()
-        }
+        val centerStyledStaticLayBuilder = StaticLayout.Builder.obtain(
+            centerStyledText,
+            0,
+            centerStyledText.length,
+            centerStyledTextPaint,
+            (progressRadius * 2).toInt()
+        ).setAlignment(Layout.Alignment.ALIGN_CENTER).setLineSpacing(2.dpToPx(), 1f)
+        val centerStyledStaticLay = centerStyledStaticLayBuilder.build()
+
+        canvas.save()
+        canvas.translate(
+            ((measuredWidth / 2f) - (centerStyledStaticLay.width / 2f) - width / 2),
+            ((measuredHeight / 2f) - (centerStyledStaticLay.height / 2f))
+        )
+
+        centerStyledStaticLay.draw(canvas)
+        canvas.restore()
     }
 
     fun setPlanets(newPlanets: List<Planet>) {
@@ -337,6 +364,11 @@ class SolarSystemTP(context: Context, attrs: AttributeSet) : View(context, attrs
 
     fun removePlanet(newPlanet: Planet) {
         planets.remove(newPlanet)
+        invalidate()
+    }
+
+    fun setCenterHelperText(text: String) {
+        centerHelperText = text
         invalidate()
     }
 

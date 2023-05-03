@@ -15,6 +15,7 @@
     <attr name="center_text_size" format="dimension" />
     <attr name="center_text_color" format="reference" />
     <attr name="center_text_font" format="reference" />
+    <attr name="center_helper_text" format="string" />
     <attr name="center_styled_text" format="string" />
     <attr name="center_styled_text_font" format="reference" />
     <attr name="center_styled_text_color" format="reference" />
