@@ -407,6 +407,8 @@ class SolarSystemTP(context: Context, attrs: AttributeSet) : View(context, attrs
 
     fun setProgressColor(newProgressColor: Int) {
         progressColor = newProgressColor
+
+        setUpPaint()
         invalidate()
     }
 
