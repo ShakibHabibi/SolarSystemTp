@@ -32,7 +32,7 @@ class SolarSystemTP(context: Context, attrs: AttributeSet) : View(context, attrs
 
     private var progress: Float
     private val progressWidth: Float
-    private val progressColor: Int
+    private var progressColor: Int
     private val progressBgColor: Int
     private val progressRadius: Float
     private var sweepAngle: Float = 0F
@@ -389,6 +389,27 @@ class SolarSystemTP(context: Context, attrs: AttributeSet) : View(context, attrs
 
     fun setCenterStyledText(text: String) {
         centerStyledText = text
+        invalidate()
+    }
+
+    fun updateData(centralText: String, centralStyledText: String, newProgress: Float) {
+        centerText = centralText
+        centerStyledText = centralStyledText
+        progress = newProgress
+
+        calculateAngle()
+        invalidate()
+    }
+
+    fun setProgressColor(newProgressColor: Int) {
+        progressColor = newProgressColor
+        invalidate()
+    }
+
+    fun clearText() {
+        centerText = ""
+        centerStyledText = ""
+
         invalidate()
     }
 
