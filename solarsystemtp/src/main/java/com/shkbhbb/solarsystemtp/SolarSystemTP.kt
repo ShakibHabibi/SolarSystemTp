@@ -283,6 +283,8 @@ class SolarSystemTP(context: Context, attrs: AttributeSet) : View(context, attrs
     }
 
     private fun drawCenterText(canvas: Canvas) {
+        if (centerText.isEmpty()) return
+
         val centerStaticLayBuilder = StaticLayout.Builder.obtain(
             centerText, 0, centerText.length, centerTextPaint, (progressRadius * 2).toInt()
         ).setAlignment(Layout.Alignment.ALIGN_CENTER).setLineSpacing(4.dpToPx(), 1f)
@@ -299,6 +301,8 @@ class SolarSystemTP(context: Context, attrs: AttributeSet) : View(context, attrs
     }
 
     private fun drawCenterHelperText(canvas: Canvas) {
+        if (centerStyledText.isEmpty()) return
+
         val width = centerStyledTextPaint.measureText(centerStyledText)
 
         val centerStaticLayBuilder = StaticLayout.Builder.obtain(
